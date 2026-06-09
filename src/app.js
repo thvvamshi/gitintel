@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
 
+const profileRoutes = require("./routes/profile.routes");
+
 const app = express();
 
 app.use(express.json());
@@ -19,20 +21,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.get("/db-test", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT NOW() as currentTime");
-
-    res.status(200).json({
-      success: true,
-      data: rows,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+app.use("/api/profiles", profileRoutes);
 
 module.exports = app;
