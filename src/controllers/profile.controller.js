@@ -1,6 +1,11 @@
 const { getGithubProfile } = require("../services/github.service");
 const calculateInsights = require("../utils/calculateInsights");
-const { createProfile } = require("../repositories/profile.repository");
+const {
+  createProfile,
+  getAllProfiles,
+  getProfileByUsername,
+} = require("../repositories/profile.repository");
+
 
 const analyzeProfile = async (req, res) => {
   try {
@@ -56,6 +61,53 @@ const analyzeProfile = async (req, res) => {
   }
 };
 
+const getProfiles = async (req, res) => {
+  try {
+    const profiles = await getAllProfiles();
+
+    return res.status(200).json({
+      success: true,
+      count: profiles.length,
+      data: profiles,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+const getProfile = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const profile =
+      await getProfileByUsername(username);
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: profile,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   analyzeProfile,
+  getProfiles,
+  getProfile,
 };

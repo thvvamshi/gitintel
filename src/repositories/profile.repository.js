@@ -47,6 +47,31 @@ const createProfile = async (profile) => {
   return result;
 };
 
+const getAllProfiles = async () => {
+  const [rows] = await pool.query(`
+    SELECT *
+    FROM profiles
+    ORDER BY analyzed_at DESC
+  `);
+
+  return rows;
+};
+
+const getProfileByUsername = async (username) => {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+    FROM profiles
+    WHERE username = ?
+    `,
+    [username],
+  );
+
+  return rows[0];
+};
+
 module.exports = {
   createProfile,
+  getAllProfiles,
+  getProfileByUsername,
 };
