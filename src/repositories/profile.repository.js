@@ -70,8 +70,24 @@ const getProfileByUsername = async (username) => {
   return rows[0];
 };
 
+
+const findByUsername = async (username) => {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+    FROM profiles
+    WHERE username = ?
+    `,
+    [username]
+  );
+
+  return rows[0];
+};
+
+
 module.exports = {
   createProfile,
   getAllProfiles,
   getProfileByUsername,
+  findByUsername,
 };

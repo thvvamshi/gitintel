@@ -1,11 +1,12 @@
 const { getGithubProfile } = require("../services/github.service");
 const calculateInsights = require("../utils/calculateInsights");
+
 const {
   createProfile,
   getAllProfiles,
   getProfileByUsername,
+  findByUsername,
 } = require("../repositories/profile.repository");
-
 
 const analyzeProfile = async (req, res) => {
   try {
@@ -15,6 +16,17 @@ const analyzeProfile = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Username is required",
+      });
+    }
+
+    // Check if already analyzed
+    const existingProfile = await findByUsername(username);
+
+    if (existingProfile) {
+      return res.status(200).json({
+        success: true,
+        message: "Profile already analyzed",
+        data: existingProfile,
       });
     }
 
@@ -54,6 +66,14 @@ const analyzeProfile = async (req, res) => {
       },
     });
   } catch (error) {
+    // GitHub user not found
+    if (error.response?.status === 404) {
+      return res.status(404).json({
+        success: false,
+        message: "GitHub user not found",
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -78,13 +98,11 @@ const getProfiles = async (req, res) => {
   }
 };
 
-
 const getProfile = async (req, res) => {
   try {
     const { username } = req.params;
 
-    const profile =
-      await getProfileByUsername(username);
+    const profile = await getProfileByUsername(username);
 
     if (!profile) {
       return res.status(404).json({
@@ -104,7 +122,6 @@ const getProfile = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   analyzeProfile,
