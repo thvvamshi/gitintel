@@ -19,4 +19,20 @@ app.get("/health", (req, res) => {
   });
 });
 
+app.get("/db-test", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT NOW() as currentTime");
+
+    res.status(200).json({
+      success: true,
+      data: rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 module.exports = app;
