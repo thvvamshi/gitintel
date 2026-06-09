@@ -1,6 +1,65 @@
 # GitIntel
 
-GitIntel is a backend analytics service that transforms public GitHub profiles into meaningful developer insights. Instead of simply returning profile information, GitIntel analyzes repository activity, developer reach, and technology preferences to generate actionable metrics.
+GitIntel is a GitHub profile analytics platform that transforms public GitHub profiles into meaningful developer insights. It analyzes profile data, repository activity, programming language usage, and repository popularity to generate actionable metrics for developers.
+
+**Live API:** https://gitintel-api.onrender.com
+
+**GitHub Repository:** https://github.com/thvvamshi/gitintel
+
+## Live Demo
+
+### API Base URL
+
+```text
+https://gitintel-api.onrender.com
+```
+
+### Repository
+
+```text
+https://github.com/thvvamshi/gitintel
+```
+
+### Quick Test
+
+Health Check:
+
+```http
+GET https://gitintel-api.onrender.com/health
+```
+
+Analyze Profile:
+
+```http
+POST https://gitintel-api.onrender.com/api/profiles/analyze
+```
+
+Request Body:
+
+```json
+{
+  "username": "thvvamshi"
+}
+```
+
+Get All Profiles:
+
+```http
+GET https://gitintel-api.onrender.com/api/profiles
+```
+
+Get Profile By Username:
+
+```http
+GET https://gitintel-api.onrender.com/api/profiles/gaearon
+```
+
+Delete Profile:
+
+```http
+DELETE https://gitintel-api.onrender.com/api/profiles/gaearon
+```
+
 
 ## Features
 
