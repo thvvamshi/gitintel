@@ -16,11 +16,14 @@ const createProfile = async (profile) => {
       following,
       public_repos,
       public_gists,
+      total_stars,
+      top_language,
+      most_starred_repo,
       account_created_at,
       account_age_years,
       followers_repo_ratio
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const values = [
@@ -37,6 +40,11 @@ const createProfile = async (profile) => {
     profile.following,
     profile.publicRepos,
     profile.publicGists,
+
+    profile.totalStars,
+    profile.topLanguage,
+    profile.mostStarredRepo,
+
     profile.accountCreatedAt,
     profile.accountAgeYears,
     profile.followersRepoRatio,

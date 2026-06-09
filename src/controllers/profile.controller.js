@@ -1,5 +1,12 @@
-const { getGithubProfile } = require("../services/github.service");
+const {
+  getGithubProfile,
+  getGithubRepos,
+} = require("../services/github.service");
+
 const calculateInsights = require("../utils/calculateInsights");
+
+const repositoryInsights =
+  require("../utils/repositoryInsights");
 
 const {
   createProfile,
@@ -19,7 +26,6 @@ const analyzeProfile = async (req, res) => {
       });
     }
 
-    // Check if already analyzed
     const existingProfile = await findByUsername(username);
 
     if (existingProfile) {
@@ -32,7 +38,11 @@ const analyzeProfile = async (req, res) => {
 
     const githubProfile = await getGithubProfile(username);
 
+    const repos = await getGithubRepos(username);
+
     const insights = calculateInsights(githubProfile);
+
+    const repoInsights = repositoryInsights(repos);
 
     await createProfile({
       githubId: githubProfile.id,
@@ -48,10 +58,16 @@ const analyzeProfile = async (req, res) => {
       following: githubProfile.following,
       publicRepos: githubProfile.public_repos,
       publicGists: githubProfile.public_gists,
+
+      totalStars: repoInsights.totalStars,
+      topLanguage: repoInsights.topLanguage,
+      mostStarredRepo: repoInsights.mostStarredRepo,
+
       accountCreatedAt: new Date(githubProfile.created_at)
         .toISOString()
         .slice(0, 19)
         .replace("T", " "),
+
       ...insights,
     });
 
@@ -62,11 +78,15 @@ const analyzeProfile = async (req, res) => {
         username: githubProfile.login,
         followers: githubProfile.followers,
         publicRepos: githubProfile.public_repos,
+
+        totalStars: repoInsights.totalStars,
+        topLanguage: repoInsights.topLanguage,
+        mostStarredRepo: repoInsights.mostStarredRepo,
+
         ...insights,
       },
     });
   } catch (error) {
-    // GitHub user not found
     if (error.response?.status === 404) {
       return res.status(404).json({
         success: false,
