@@ -92,10 +92,22 @@ const findByUsername = async (username) => {
   return rows[0];
 };
 
+const deleteProfileByUsername = async (username) => {
+  const [result] = await pool.query(
+    `
+    DELETE FROM profiles
+    WHERE username = ?
+    `,
+    [username]
+  );
+
+  return result;
+};
 
 module.exports = {
   createProfile,
   getAllProfiles,
   getProfileByUsername,
   findByUsername,
+deleteProfileByUsername,
 };

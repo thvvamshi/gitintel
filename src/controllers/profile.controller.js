@@ -13,6 +13,7 @@ const {
   getAllProfiles,
   getProfileByUsername,
   findByUsername,
+  deleteProfileByUsername,
 } = require("../repositories/profile.repository");
 
 const analyzeProfile = async (req, res) => {
@@ -143,8 +144,36 @@ const getProfile = async (req, res) => {
   }
 };
 
+const deleteProfile = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const profile = await getProfileByUsername(username);
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found",
+      });
+    }
+
+    await deleteProfileByUsername(username);
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   analyzeProfile,
   getProfiles,
   getProfile,
+  deleteProfile,
 };
